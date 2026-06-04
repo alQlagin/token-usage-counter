@@ -1,6 +1,6 @@
 {
   "name": "token-usage-counter",
-  "description": "Tracks Claude token usage and costs per session, with tools to analyze daily spending.",
+  "description": "Tracks Claude Code and GitHub Copilot CLI token usage and costs per session, with tools to analyze daily spending.",
   "author": {
     "name": "Aleksey Kulagin"
   },

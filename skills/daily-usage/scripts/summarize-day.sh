@@ -10,8 +10,9 @@ if [[ ! -d "$usage_dir" ]]; then
   exit 1
 fi
 
-# Collect all session summary files (not message logs)
-mapfile -t files < <(find "$usage_dir" -maxdepth 1 -name 'claude-*_summary.json')
+# Collect all session summary files (not message logs) from every supported
+# runtime: Claude Code (claude-*) and GitHub Copilot CLI (copilot-*).
+mapfile -t files < <(find "$usage_dir" -maxdepth 1 \( -name 'claude-*_summary.json' -o -name 'copilot-*_summary.json' \))
 
 if [[ ${#files[@]} -eq 0 ]]; then
   echo '{"error": "no session files found in '"$usage_dir"'"}' >&2
