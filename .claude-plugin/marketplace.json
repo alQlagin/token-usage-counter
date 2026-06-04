@@ -1,5 +1,8 @@
 {
   "name": "token-usage-counter",
+  "owner": {
+    "name": "Aleksey Kulagin"
+  },
   "plugins": [
     {
       "name": "token-usage-counter",
