@@ -1,14 +1,21 @@
 # token-usage-counter
 
-Tracks Claude token usage and costs per session via a `Stop` hook.
+A Claude Code plugin that tracks token usage and costs per session, with a skill to analyze daily spending.
+
+## Installation
+
+```
+/plugin marketplace add alQlagin/token-usage-counter
+/plugin install token-usage-counter@token-usage-counter
+```
 
 ## How it works
 
-`log-usage.sh` runs automatically when a Claude Code session ends. It reads the session transcript, aggregates token counts by model, calculates cost, and writes a JSON summary.
+A `Stop` hook fires when each Claude Code session ends. `scripts/claude-log-summary.sh` reads the session transcript, aggregates token counts by model, calculates cost, and writes a JSON summary to `.aiusage/YYYY-MM-DD/`.
 
 ## Output
 
-Files are written to `.aiusage/YYYY-MM-DD/`:
+Files are written to `<project>/.aiusage/YYYY-MM-DD/`:
 
 | File | Contents |
 |---|---|
@@ -29,16 +36,25 @@ Files are written to `.aiusage/YYYY-MM-DD/`:
       "output_tokens": 15394,
       "cache_creation_input_tokens": 117934,
       "cache_read_input_tokens": 1227862,
-      "cost_usd": 1.04,
+      "cost_usd": 1.0418,
       "pricing_unit": "per_million_tokens"
     }
   }
 }
 ```
 
+`cost_usd` per model stores full precision; `total_cost_usd` is rounded to cents.
+
+## Daily usage skill
+
+Ask Claude about your spending and it will use the bundled `daily-usage` skill automatically:
+
+> "How much did I spend today?"
+> "Show my token usage for 2026-06-03"
+
 ## Pricing
 
-Prices are defined in `.claude/scripts/pricing.json` (USD per million tokens) and loaded at runtime — update that file to add models or adjust rates without touching the script.
+Prices are defined in `scripts/pricing.json` (USD per million tokens) and loaded at runtime — update that file to add models or adjust rates without touching the script. A custom path can be set via plugin settings (`pricing_file`).
 
 Sources: [Anthropic pricing](https://platform.claude.com/docs/en/about-claude/pricing) · [Anthropic model overview](https://platform.claude.com/docs/en/about-claude/models/overview) · [AWS Bedrock pricing](https://aws.amazon.com/bedrock/pricing/)
 
@@ -56,10 +72,10 @@ Sources: [Anthropic pricing](https://platform.claude.com/docs/en/about-claude/pr
 **Cost formula:**
 
 ```
-cost_usd = (input_tokens × p.input
-          + output_tokens × p.output
-          + cache_creation_input_tokens × p.cache_write
-          + cache_read_input_tokens × p.cache_read) / 1_000_000
+total_cost_usd = round_to_cents(
+  Σ (input_tokens × p.input
+   + output_tokens × p.output
+   + cache_creation_input_tokens × p.cache_write
+   + cache_read_input_tokens × p.cache_read) / 1_000_000
+)
 ```
-
-Per-model cost is rounded to cents before being summed into `total_cost_usd`.
