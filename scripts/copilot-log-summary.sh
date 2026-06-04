@@ -17,7 +17,7 @@ mkdir -p "$out_dir"
 jq -s --arg sid "$sid" --slurpfile prices "$pricing_file" '
   def cost(model; inp; out; cw; cr):
     $prices[0][model] as $p
-    | if $p then ((inp * $p.input + out * $p.output + cw * $p.cache_write + cr * $p.cache_read) / 1000000 * 100 | round) / 100
+    | if $p then (inp * $p.input + out * $p.output + cw * $p.cache_write + cr * $p.cache_read) / 1000000
       else null end;
 
   [.[] | select(.message.usage)] as $msgs
@@ -47,7 +47,7 @@ jq -s --arg sid "$sid" --slurpfile prices "$pricing_file" '
       session_id: $sid,
       last_updated: (now | todate),
       messages: ($msgs | length),
-      total_cost_usd: ([$by_model[].value.cost_usd | select(. != null)] | if length > 0 then add else null end),
+      total_cost_usd: ([$by_model[].value.cost_usd | select(. != null)] | if length > 0 then (add * 100 | round) / 100 else null end),
       usage: ($by_model | from_entries)
     }
 ' "$tp" > "$out_dir/copilot-${sid}_summary.json"
