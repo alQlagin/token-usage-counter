@@ -9,16 +9,6 @@
           }
         ]
       }
-    ],
-    "agentStop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "./scripts/copilot-log-summary.sh 2>/dev/null || true"
-          }
-        ]
-      }
     ]
   }
 }
