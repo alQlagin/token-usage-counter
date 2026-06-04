@@ -54,7 +54,13 @@ Ask Claude about your spending and it will use the bundled `daily-usage` skill a
 
 ## Pricing
 
-Prices are defined in `scripts/pricing.json` (USD per million tokens) and loaded at runtime — update that file to add models or adjust rates without touching the script. A custom path can be set via plugin settings (`pricing_file`).
+Prices are defined in `scripts/pricing.json` (USD per million tokens) and loaded at runtime. To customize rates or add models, copy the sample file and edit it:
+
+```bash
+cp scripts/pricing.sample.json scripts/pricing.json
+```
+
+To use a completely different file (e.g. a shared team pricing file), set the `pricing_file` option via `/plugin` settings — the value is the absolute path to your custom `pricing.json`.
 
 Sources: [Anthropic pricing](https://platform.claude.com/docs/en/about-claude/pricing) · [Anthropic model overview](https://platform.claude.com/docs/en/about-claude/models/overview) · [AWS Bedrock pricing](https://aws.amazon.com/bedrock/pricing/)
 
