@@ -21,30 +21,6 @@ Files are written to `<project>/.aiusage/YYYY-MM-DD/`:
 |---|---|
 | `claude-{session_id}_summary.json` | Aggregated token counts and cost summary per model |
 
-### Example summary
-
-```json
-{
-  "session_id": "966eec66-...",
-  "last_updated": "2026-06-04T12:32:32Z",
-  "messages": 48,
-  "total_cost_usd": 1.34,
-  "usage": {
-    "claude-sonnet-4-6": {
-      "messages": 44,
-      "input_tokens": 88,
-      "output_tokens": 15394,
-      "cache_creation_input_tokens": 117934,
-      "cache_read_input_tokens": 1227862,
-      "cost_usd": 1.0418,
-      "pricing_unit": "per_million_tokens"
-    }
-  }
-}
-```
-
-`cost_usd` per model stores full precision; `total_cost_usd` is rounded to cents.
-
 ## Daily usage skill
 
 Ask Claude about your spending and it will use the bundled `daily-usage` skill automatically:
