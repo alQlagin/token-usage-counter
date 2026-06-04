@@ -45,6 +45,7 @@ jq -s --arg sid "$sid" --slurpfile prices "$pricing_file" '
     ) as $by_model
   | {
       session_id: $sid,
+      source: "claude",
       last_updated: (now | todate),
       messages: ($msgs | length),
       total_cost_usd: ([$by_model[].value.cost_usd | select(. != null)] | if length > 0 then (add * 100 | round) / 100 else null end),
