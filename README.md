@@ -38,7 +38,32 @@ Files are written to `<project>/.aiusage/YYYY-MM-DD/`:
 | File | Contents |
 |---|---|
 | `claude-{session_id}_summary.json` | Aggregated token counts and cost summary per model (Claude Code) |
-| `copilot-{session_id}_summary.json` | Same schema, from a Copilot CLI session (`"source": "copilot"`) |
+| `copilot-{session_id}_summary.json` | Same schema, from a Copilot CLI session |
+
+Both runtimes write the **same schema**:
+
+```json
+{
+  "session_id": "5c844b77-…",
+  "source": "claude",
+  "last_updated": "2026-06-04T19:00:44Z",
+  "messages": 17,
+  "total_cost_usd": 0.75,
+  "usage": {
+    "claude-opus-4-8": {
+      "messages": 17,
+      "input_tokens": 13639,
+      "output_tokens": 8817,
+      "cache_creation_input_tokens": 43232,
+      "cache_read_input_tokens": 378350,
+      "cost_usd": 0.747995,
+      "pricing_unit": "per_million_tokens"
+    }
+  }
+}
+```
+
+The `source` field identifies which runtime produced the summary — `"claude"` or `"copilot"` — matching the filename prefix. It lets tools tell the runtimes apart from the file contents alone, even after the files are moved or merged. (For Copilot sessions the per-model token fields other than `output_tokens` are `0` — see the caveat above.)
 
 The `daily-usage` skill aggregates both `claude-*` and `copilot-*` summaries into one daily report.
 
