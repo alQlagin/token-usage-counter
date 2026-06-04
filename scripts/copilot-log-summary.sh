@@ -17,7 +17,7 @@ cwd=$(jq -r '.cwd // empty' <<<"$input")
 
 root="${cwd:-${COPILOT_PROJECT_DIR:-${CLAUDE_PROJECT_DIR:-$PWD}}}"
 plugin_root="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
-pricing_file="${CLAUDE_PLUGIN_OPTION_PRICING_FILE:-$plugin_root/scripts/pricing.json}"
+pricing_file="${CLAUDE_PLUGIN_OPTION_PRICING_FILE:-$plugin_root/scripts/copilot-pricing.json}"
 out_dir="$root/.aiusage/$(date +%Y-%m-%d)"
 mkdir -p "$out_dir"
 

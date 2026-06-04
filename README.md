@@ -29,7 +29,7 @@ A stop hook fires at the end of each agent turn. It reads the session transcript
 
 The two hook files live at different paths and never collide: Claude Code reads only `hooks/hooks.json`, while Copilot CLI auto-discovers the root `hooks.json` (and ignores the Claude file, which has no `version` field). Both handlers resolve their script and project paths from `${CLAUDE_PLUGIN_ROOT}` / `CLAUDE_PROJECT_DIR`, which Copilot CLI sets for Claude compatibility — so the wiring is portable across the marketplace install location of either runtime.
 
-> **Copilot caveat:** Copilot's transcript records only **output tokens** (and the model) per turn — it has no input/cache token counts. Costs are therefore output-only, and only computed for models present in `pricing.json`. The default pricing file lists Claude models; add your Copilot/OpenAI model rates (e.g. `gpt-5`, `gpt-5-mini`) to get non-null Copilot costs.
+> **Copilot caveat:** Copilot's transcript records only **output tokens** (and the model) per turn — it has no input/cache token counts. Costs are therefore output-only, and computed from the dedicated `scripts/copilot-pricing.json` file (GitHub's usage-based rates for the GPT, Claude, and Gemini models Copilot offers). Add any model missing from that file to get its cost.
 
 ## Output
 
@@ -76,15 +76,25 @@ Ask Claude about your spending and it will use the bundled `daily-usage` skill a
 
 ## Pricing
 
-Prices are defined in `scripts/pricing.json` (USD per million tokens) and loaded at runtime. To customize rates or add models, copy the sample file and edit it:
+Prices are USD per million tokens, loaded at runtime. Each runtime has its own bundled file, because the two record different model identifiers — **Claude Code uses dashed IDs** (`claude-opus-4-6`), **Copilot CLI uses dotted IDs** (`claude-opus-4.6`, `gpt-5-mini`). A model with no matching key yields `cost_usd: null`.
+
+| Runtime | Default file | Sample |
+|---|---|---|
+| Claude Code | `scripts/claude-pricing.json` | `claude-pricing.sample.json` |
+| Copilot CLI | `scripts/copilot-pricing.json` | `copilot-pricing.sample.json` |
+
+To customize rates or add models, copy the relevant sample over the active file and edit it:
 
 ```bash
-cp pricing.sample.json scripts/pricing.json
+cp claude-pricing.sample.json scripts/claude-pricing.json    # Claude Code
+cp copilot-pricing.sample.json scripts/copilot-pricing.json  # Copilot CLI
 ```
 
-To use a completely different file (e.g. a shared team pricing file), set the `pricing_file` option via `/plugin` settings — the value is the absolute path to your custom `pricing.json`.
+To point at a file elsewhere (e.g. a shared team file), set the single `pricing_file` option via `/plugin` settings to its absolute path — it applies to **both** runtimes. Leave it unset to use the two bundled files above.
 
-Sources: [Anthropic pricing](https://platform.claude.com/docs/en/about-claude/pricing) · [Anthropic model overview](https://platform.claude.com/docs/en/about-claude/models/overview) · [AWS Bedrock pricing](https://aws.amazon.com/bedrock/pricing/)
+Sources: [Anthropic pricing](https://platform.claude.com/docs/en/about-claude/pricing) · [Anthropic model overview](https://platform.claude.com/docs/en/about-claude/models/overview) · [GitHub Copilot models and pricing](https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing)
+
+### Claude Code models — `scripts/claude-pricing.json` (dashed IDs)
 
 | Model | Input | Output | Cache Write | Cache Read |
 |---|---|---|---|---|
@@ -96,6 +106,35 @@ Sources: [Anthropic pricing](https://platform.claude.com/docs/en/about-claude/pr
 | claude-sonnet-4-6 | $3.00 | $15.00 | $3.75 | $0.30 |
 | claude-sonnet-4-5 | $3.00 | $15.00 | $3.75 | $0.30 |
 | claude-haiku-4-5 | $1.00 | $5.00 | $1.25 | $0.10 |
+
+### GitHub Copilot CLI models — `scripts/copilot-pricing.json` (dotted IDs)
+
+GitHub Copilot moved to usage-based (per-token) billing on 2026-06-01; these are GitHub's published per-million-token rates. Cache Write is shown as the input rate for OpenAI/Google models, which have no separate cache-write surcharge.
+
+| Model | Input | Output | Cache Write | Cache Read |
+|---|---|---|---|---|
+| gpt-5-mini | $0.25 | $2.00 | $0.25 | $0.025 |
+| gpt-5.2 | $1.75 | $14.00 | $1.75 | $0.175 |
+| gpt-5.2-codex | $1.75 | $14.00 | $1.75 | $0.175 |
+| gpt-5.3-codex | $1.75 | $14.00 | $1.75 | $0.175 |
+| gpt-5.4 | $2.50 | $15.00 | $2.50 | $0.25 |
+| gpt-5.4-mini | $0.75 | $4.50 | $0.75 | $0.075 |
+| gpt-5.4-nano | $0.20 | $1.25 | $0.20 | $0.02 |
+| gpt-5.5 | $5.00 | $30.00 | $5.00 | $0.50 |
+| claude-haiku-4.5 | $1.00 | $5.00 | $1.25 | $0.10 |
+| claude-sonnet-4 | $3.00 | $15.00 | $3.75 | $0.30 |
+| claude-sonnet-4.5 | $3.00 | $15.00 | $3.75 | $0.30 |
+| claude-sonnet-4.6 | $3.00 | $15.00 | $3.75 | $0.30 |
+| claude-opus-4.5 | $5.00 | $25.00 | $6.25 | $0.50 |
+| claude-opus-4.6 | $5.00 | $25.00 | $6.25 | $0.50 |
+| claude-opus-4.7 | $5.00 | $25.00 | $6.25 | $0.50 |
+| claude-opus-4.8 | $5.00 | $25.00 | $6.25 | $0.50 |
+| gemini-2.5-pro | $1.25 | $10.00 | $1.25 | $0.125 |
+| gemini-3-flash | $0.50 | $3.00 | $0.50 | $0.05 |
+| gemini-3.1-pro | $2.00 | $12.00 | $2.00 | $0.20 |
+| gemini-3.5-flash | $1.50 | $9.00 | $1.50 | $0.15 |
+
+> In practice only the **Output** rate affects Copilot costs, since Copilot's transcript records only output tokens (see the caveat above). The other columns apply if a future Copilot version logs full usage.
 
 **Cost formula:**
 

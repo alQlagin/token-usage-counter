@@ -9,7 +9,7 @@ tp=$(jq -r '.transcript_path // empty' <<<"$input")
 
 root="${CLAUDE_PROJECT_DIR:-.}"
 out_dir="$root/.aiusage/$(date +%Y-%m-%d)"
-pricing_file="${CLAUDE_PLUGIN_OPTION_PRICING_FILE:-${CLAUDE_PLUGIN_ROOT}/scripts/pricing.json}"
+pricing_file="${CLAUDE_PLUGIN_OPTION_PRICING_FILE:-${CLAUDE_PLUGIN_ROOT}/scripts/claude-pricing.json}"
 mkdir -p "$out_dir"
 
 [[ ! -f "$pricing_file" ]] && exit 0

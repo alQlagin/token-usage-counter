@@ -8,7 +8,7 @@
     "pricing_file": {
       "type": "string",
       "title": "Pricing file path",
-      "description": "Path to a custom pricing.json. Defaults to the bundled pricing file."
+      "description": "Path to a custom pricing JSON, used for both runtimes. When unset, each runtime uses its own bundled file: scripts/claude-pricing.json for Claude Code, scripts/copilot-pricing.json for Copilot CLI."
     }
   }
 }
