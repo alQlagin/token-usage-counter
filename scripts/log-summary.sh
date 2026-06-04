@@ -8,8 +8,8 @@ tp=$(jq -r '.transcript_path // empty' <<<"$input")
 [[ -z "$sid" || -z "$tp" || ! -f "$tp" ]] && exit 0
 
 root="${CLAUDE_PROJECT_DIR:-.}"
-out_dir="$root/.claude/usage/$(date +%Y-%m-%d)"
-pricing_file="$root/.claude/scripts/pricing.json"
+out_dir="$root/.aiusage/$(date +%Y-%m-%d)"
+pricing_file="${CLAUDE_PLUGIN_OPTION_PRICING_FILE:-${CLAUDE_PLUGIN_ROOT}/scripts/pricing.json}"
 mkdir -p "$out_dir"
 
 [[ ! -f "$pricing_file" ]] && exit 0
@@ -50,9 +50,4 @@ jq -s --arg sid "$sid" --slurpfile prices "$pricing_file" '
       total_cost_usd: ([$by_model[].value.cost_usd | select(. != null)] | if length > 0 then add else null end),
       usage: ($by_model | from_entries)
     }
-' "$tp" > "$out_dir/${sid}_summary.json"
-
-jq -c 'select(.type == "user" or .type == "assistant")
-  | {type, timestamp, isSidechain, uuid, parentUuid, message}
-' "$tp" > "$out_dir/${sid}_messages.jsonl"
-
+' "$tp" > "$out_dir/claude-${sid}_summary.json"

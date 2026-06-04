@@ -8,7 +8,7 @@ version: 0.1.0
 
 ## Overview
 
-Aggregate all session-level token usage summaries for a given date into a single daily report. Each session produces a JSON file in `.claude/usage/YYYY-MM-DD/`; this skill merges them into totals broken down by model.
+Aggregate all session-level token usage summaries for a given date into a single daily report. Each session produces a JSON file in `.aiusage/YYYY-MM-DD/`; this skill merges them into totals broken down by model.
 
 ## Workflow
 
@@ -20,7 +20,7 @@ Execute the bundled script, passing the target date (defaults to today):
 bash .claude/skills/daily-usage/scripts/summarize-day.sh [YYYY-MM-DD] [data-dir]
 ```
 
-The script reads all `*.json` session summary files (excluding `*_messages.jsonl`) from `.claude/usage/<date>/`, merges them with `jq`, and prints a JSON report to stdout.
+The script reads all `*.json` session summary files (excluding `*_messages.jsonl`) from `.aiusage/<date>/`, merges them with `jq`, and prints a JSON report to stdout.
 
 ### Step 2: Present the report
 

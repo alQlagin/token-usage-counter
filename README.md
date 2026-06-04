@@ -1,4 +1,4 @@
-# token-counter
+# token-usage-counter
 
 Tracks Claude token usage and costs per session via a `Stop` hook.
 
@@ -8,12 +8,11 @@ Tracks Claude token usage and costs per session via a `Stop` hook.
 
 ## Output
 
-Files are written to `.claude/usage/YYYY-MM-DD/`:
+Files are written to `.aiusage/YYYY-MM-DD/`:
 
 | File | Contents |
 |---|---|
-| `{session_id}_summary.json` | Aggregated token counts and cost summary per model |
-| `{session_id}_messages.jsonl` | Filtered user + assistant turns from the transcript |
+| `claude-{session_id}_summary.json` | Aggregated token counts and cost summary per model |
 
 ### Example summary
 

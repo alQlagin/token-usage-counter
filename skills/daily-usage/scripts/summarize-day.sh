@@ -2,7 +2,7 @@
 set -euo pipefail
 
 date_arg="${1:-$(date +%Y-%m-%d)}"
-data_dir="${2:-$PWD/data}"
+data_dir="${2:-$PWD/.aiusage}"
 usage_dir="$data_dir/$date_arg"
 
 if [[ ! -d "$usage_dir" ]]; then
@@ -11,7 +11,7 @@ if [[ ! -d "$usage_dir" ]]; then
 fi
 
 # Collect all session summary files (not message logs)
-mapfile -t files < <(find "$usage_dir" -maxdepth 1 -name '*_summary.json')
+mapfile -t files < <(find "$usage_dir" -maxdepth 1 -name 'claude-*_summary.json')
 
 if [[ ${#files[@]} -eq 0 ]]; then
   echo '{"error": "no session files found in '"$usage_dir"'"}' >&2
