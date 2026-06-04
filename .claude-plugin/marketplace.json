@@ -7,10 +7,7 @@
     {
       "name": "token-usage-counter",
       "description": "Tracks Claude and GitHub Copilot token usage and costs per session, with tools to analyze daily spending.",
-      "source": {
-        "source": "github",
-        "repo": "alQlagin/token-usage-counter"
-      }
+      "source": "./"
     }
   ]
 }
