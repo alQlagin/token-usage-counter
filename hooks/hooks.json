@@ -9,6 +9,16 @@
           }
         ]
       }
+    ],
+    "agentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/scripts/copilot-log-summary.sh\" 2>/dev/null || true"
+          }
+        ]
+      }
     ]
   }
 }
