@@ -29,6 +29,8 @@ A stop hook fires at the end of each agent turn. It reads the session transcript
 
 The two hook files live at different paths and never collide: Claude Code reads only `hooks/hooks.json`, while Copilot CLI auto-discovers the root `hooks.json` (and ignores the Claude file, which has no `version` field). Both handlers resolve their script and project paths from `${CLAUDE_PLUGIN_ROOT}` / `CLAUDE_PROJECT_DIR`, which Copilot CLI sets for Claude compatibility — so the wiring is portable across the marketplace install location of either runtime.
 
+**Subagents:** Claude Code stores each subagent's turns in a sibling `<transcript>/subagents/agent-*.jsonl` directory rather than in the main transcript. The Claude handler reads those files alongside the main transcript so subagent tokens are folded into the same session summary (not tracked separately). A trailing `-YYYYMMDD` release suffix on a model ID — which subagents may report (e.g. `claude-haiku-4-5-20251001`) — is normalized to the bare ID so it still matches the pricing keys.
+
 > **Copilot caveat:** Copilot's transcript records only **output tokens** (and the model) per turn — it has no input/cache token counts. Costs are therefore output-only, and computed from the dedicated `scripts/copilot-pricing.json` file (GitHub's usage-based rates for the GPT, Claude, and Gemini models Copilot offers). Add any model missing from that file to get its cost.
 
 ## Output
