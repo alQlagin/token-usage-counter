@@ -18,12 +18,8 @@ if [[ -d "$sub_dir" ]]; then
     < <(find "$sub_dir" -maxdepth 1 -name '*.jsonl')
 fi
 
-# Raw assistant events from the transcript, one JSONL line each.
-# Handles both Claude-format (.message.usage) and Copilot/VS Code native
-# format (.type=="assistant.message") so VS Code Copilot Chat sessions
-# produce real lines even when token data is absent.
+# All transcript events, one JSONL line each.
 # session_id and source are added for downstream identification.
 jq -sc --arg sid "$sid" '
-  .[] | select(.message.usage or (.type == "assistant.message" and .message == null)) |
-  . + {session_id: $sid, source: "claude"}
+  .[] | . + {session_id: $sid, source: "claude"}
 ' "${transcripts[@]}" > "$out_dir/claude-${sid}_messages.jsonl"

@@ -12,9 +12,8 @@ root="${cwd:-${COPILOT_PROJECT_DIR:-${CLAUDE_PROJECT_DIR:-$PWD}}}"
 out_dir="$root/.aiusage/$(date +%Y-%m-%d)"
 mkdir -p "$out_dir"
 
-# Raw assistant.message events from the transcript, one JSONL line each.
+# All transcript events, one JSONL line each.
 # session_id and source are added for downstream identification.
 jq -sc --arg sid "$sid" '
-  .[] | select(.type == "assistant.message") |
-  . + {session_id: $sid, source: "copilot"}
+  .[] | . + {session_id: $sid, source: "copilot"}
 ' "$tp" > "$out_dir/copilot-${sid}_messages.jsonl"
