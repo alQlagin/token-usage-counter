@@ -34,6 +34,8 @@ The `transcript_path` field records the absolute path of the main transcript fil
 
 Both handlers only rewrite the summary when the *main* agent's turn ends (`Stop`/`agentStop`). A summary inspected right after a subagent runs but before the next main-turn-end is one update stale — not a bug.
 
+**VS Code Copilot Chat (native agent) is not counted.** Its transcript records no token data at all — no model, no output tokens. The Stop hook fires (VS Code has a Claude-compatible hook engine that picks up `hooks/hooks.json`) but the summary is always empty. Only Copilot CLI (terminal) and Claude Code / VS Code Claude Agent sessions produce real summaries.
+
 The Copilot caveat drives the schema: Copilot's transcript records only `outputTokens`, so its summaries have `0` for input/cache fields and the cost is output-only. The non-output token fields are read defensively (`// 0`) precisely so the schema still matches Claude's.
 
 ### Cost model

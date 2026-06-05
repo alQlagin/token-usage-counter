@@ -35,6 +35,8 @@ The two hook files live at different paths and never collide: Claude Code reads 
 
 > **Copilot caveat:** Copilot's transcript records only **output tokens** (and the model) per turn — it has no input/cache token counts. Costs are therefore output-only, and computed from the dedicated `scripts/copilot-pricing.json` file (GitHub's usage-based rates for the GPT, Claude, and Gemini models Copilot offers). Add any model missing from that file to get its cost.
 
+> **VS Code Copilot Chat is not counted.** The native VS Code Copilot Chat agent writes no token data to its transcript at all — no model, no output tokens, nothing. The Stop hook fires but the summary is always empty (`messages: 0, total_cost_usd: null`). Only sessions started via the **Copilot CLI** (terminal) or the **Claude Code** extension are tracked.
+
 ## Output
 
 Files are written to `<project>/.aiusage/YYYY-MM-DD/`:
