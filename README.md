@@ -48,6 +48,7 @@ Both runtimes write the **same schema**:
 {
   "session_id": "5c844b77-…",
   "source": "claude",
+  "transcript_path": "/Users/alex/.claude/projects/…/5c844b77-….jsonl",
   "last_updated": "2026-06-04T19:00:44Z",
   "messages": 17,
   "total_cost_usd": 0.75,
@@ -65,7 +66,7 @@ Both runtimes write the **same schema**:
 }
 ```
 
-The `source` field identifies which runtime produced the summary — `"claude"` or `"copilot"` — matching the filename prefix. It lets tools tell the runtimes apart from the file contents alone, even after the files are moved or merged. (For Copilot sessions the per-model token fields other than `output_tokens` are `0` — see the caveat above.)
+The `source` field identifies which runtime produced the summary — `"claude"` or `"copilot"` — matching the filename prefix. It lets tools tell the runtimes apart from the file contents alone, even after the files are moved or merged. The `transcript_path` field records the absolute path of the main transcript file the handler read, useful for tracing a summary back to its source. (For Copilot sessions the per-model token fields other than `output_tokens` are `0` — see the caveat above.)
 
 The `daily-usage` skill aggregates both `claude-*` and `copilot-*` summaries into one daily report.
 
