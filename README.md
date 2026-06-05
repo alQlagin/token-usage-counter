@@ -15,7 +15,7 @@ GitHub Copilot CLI:
 
 ```
 /plugin marketplace add alQlagin/token-usage-counter
-/plugin install token-usage-counter
+/plugin install token-usage-counter@token-usage-counter
 ```
 
 ## How it works
