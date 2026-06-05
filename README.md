@@ -20,6 +20,8 @@ GitHub Copilot CLI:
 
 ## How it works
 
+> **Note:** In practice only the **Output** rate affects Copilot costs, since Copilot's transcript records only output tokens. The other token columns apply if a future Copilot version logs full usage.
+
 A stop hook fires at the end of each agent turn. It reads the session transcript, aggregates token counts by model, calculates cost, and writes a JSON summary to `.aiusage/YYYY-MM-DD/`. Each runtime has its own hook and handler because their transcript formats differ:
 
 | Runtime | Hook config | Event | Handler |
