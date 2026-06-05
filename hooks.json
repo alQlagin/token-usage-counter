@@ -6,11 +6,6 @@
         "type": "command",
         "bash": "\"${CLAUDE_PLUGIN_ROOT}/scripts/copilot-log-summary.sh\" 2>/dev/null || true",
         "timeoutSec": 30
-      },
-      {
-        "type": "command",
-        "bash": "\"${CLAUDE_PLUGIN_ROOT}/scripts/copilot-log-messages.sh\" 2>/dev/null || true",
-        "timeoutSec": 30
       }
     ]
   }

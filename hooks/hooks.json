@@ -6,10 +6,6 @@
           {
             "type": "command",
             "command": "\"${CLAUDE_PLUGIN_ROOT}/scripts/claude-log-summary.sh\" 2>/dev/null || true"
-          },
-          {
-            "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}/scripts/claude-log-messages.sh\" 2>/dev/null || true"
           }
         ]
       }
