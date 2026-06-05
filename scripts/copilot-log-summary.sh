@@ -23,7 +23,7 @@ mkdir -p "$out_dir"
 
 [[ ! -f "$pricing_file" ]] && exit 0
 
-jq -s --arg sid "$sid" --slurpfile prices "$pricing_file" '
+jq -s --arg sid "$sid" --arg tp "$tp" --slurpfile prices "$pricing_file" '
   def cost(model; inp; out; cw; cr):
     $prices[0][model] as $p
     | if $p then (inp * $p.input + out * $p.output + cw * $p.cache_write + cr * $p.cache_read) / 1000000
@@ -58,6 +58,7 @@ jq -s --arg sid "$sid" --slurpfile prices "$pricing_file" '
   | {
       session_id: $sid,
       source: "copilot",
+      transcript_path: $tp,
       last_updated: (now | todate),
       messages: ($msgs | length),
       total_cost_usd: ([$by_model[].value.cost_usd | select(. != null)] | if length > 0 then (add * 100 | round) / 100 else null end),

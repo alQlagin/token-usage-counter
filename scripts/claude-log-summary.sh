@@ -25,7 +25,7 @@ if [[ -d "$sub_dir" ]]; then
     < <(find "$sub_dir" -maxdepth 1 -name '*.jsonl')
 fi
 
-jq -s --arg sid "$sid" --slurpfile prices "$pricing_file" '
+jq -s --arg sid "$sid" --arg tp "$tp" --slurpfile prices "$pricing_file" '
   # Strip a trailing -YYYYMMDD release suffix (e.g. claude-haiku-4-5-20251001,
   # which subagents may report) so the ID matches the bare pricing keys.
   def norm: (. // "unknown") | sub("-[0-9]{8}$"; "");
@@ -61,6 +61,7 @@ jq -s --arg sid "$sid" --slurpfile prices "$pricing_file" '
   | {
       session_id: $sid,
       source: "claude",
+      transcript_path: $tp,
       last_updated: (now | todate),
       messages: ($msgs | length),
       total_cost_usd: ([$by_model[].value.cost_usd | select(. != null)] | if length > 0 then (add * 100 | round) / 100 else null end),
